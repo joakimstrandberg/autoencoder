@@ -49,6 +49,7 @@ import tensorflowjs as tfjs
 tfjs.converters.save_keras_model(autoencoder, "./backend/models/autoencoder")
 tfjs.converters.save_keras_model(decoder, "./backend/models/decoder")
 tfjs.converters.save_keras_model(encoder, "./backend/models/encoder")
+
 # encode and decode some digits
 # note that we take them from the *test* set
 encoded_imgs = encoder.predict(x_test)

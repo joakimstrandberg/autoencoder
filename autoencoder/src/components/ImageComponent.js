@@ -17,7 +17,7 @@ class ImageComponent extends Component {
     }
 
     componentDidMount(){
-        if (this.props.data !== undefined){
+        if (this.props.data !== null){
             this.showImage(this.props.data);
         }
     }
@@ -47,7 +47,6 @@ class ImageComponent extends Component {
         c.width = this.state.width*this.state.scale;
         c.height = this.state.height*this.state.scale;
         var ctx = c.getContext("2d");
-        console.log(pixelData);
 
         for (var x=0; x<this.state.width; x++) {
             for (var y=0; y<this.state.height; y++) {
@@ -56,15 +55,22 @@ class ImageComponent extends Component {
             }
         }
     }
-        
   
     render() {
       return (
-        <div>
-          <canvas id={this.props.id} style={{border:'1px solid #d3d3d3'}}></canvas>
+        <div style= {canvasDiv}>
+        <h4>{this.props.name}</h4>
+          <canvas id={this.props.id} style={{border:'1px solid #d3d3d3'}} height={this.state.height*this.state.scale} width={this.state.width*this.state.scale}></canvas>
         </div>
       );
     }
+  }
+
+      
+  const canvasDiv = {
+    border: '1px solid #d3d3d3',
+    borderRadius: '5px',
+    padding: '0.5em'
   }
   
   export default ImageComponent;

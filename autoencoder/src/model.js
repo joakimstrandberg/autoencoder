@@ -8,13 +8,23 @@ export default class Model {
         this.inputShape = inputShape
     }
 
+    //Make this a promise
     loadModel(callback){
         tf.loadLayersModel('http://localhost:5000/autoencoder/model.json').then(res => {
             this.autoencoder = res;
         }).catch(err => {
             console.log(err);
         });
-        //this.autoencoder = autoencoder;
+        tf.loadLayersModel('http://localhost:5000/decoder/model.json').then(res => {
+            this.decoder = res;
+        }).catch(err => {
+            console.log(err);
+        });
+        tf.loadLayersModel('http://localhost:5000/encoder/model.json').then(res => {
+            this.encoder = res;
+        }).catch(err => {
+            console.log(err);
+        });
         callback();
     }
 
@@ -39,9 +49,10 @@ export default class Model {
     }
 
     trainModel(x,callback){
+        console.log(x);
         tf.tidy(() => {
             const x_train = tf.tensor(x,[x.length,x[0].length]);
-            console.log(x_train.print())
+
             this.autoencoder.compile({optimizer: tf.train.adadelta(), loss: 'meanSquaredError'});
             this.autoencoder.fit(x_train,x_train, {
                 batchSize: 128,
@@ -50,14 +61,36 @@ export default class Model {
                 callback(res);
             }).catch(err => callback(err));
         })
-        console.log(tf.memory());
     }
 
     predict(x){
+
         const d = tf.tidy(() => {  
             const x_tensor= tf.tensor(x,[1,x.length]);
-            x_tensor.print();
             var pred = this.autoencoder.predict(x_tensor);
+            var arr = pred.dataSync();
+            arr = Array.from(arr);
+            return arr;
+        })
+
+        return d;
+    }
+
+    predictEncoder(x){
+        const d = tf.tidy(() => {  
+            const x_tensor= tf.tensor(x,[1,x.length]);
+            var pred = this.encoder.predict(x_tensor);
+            var arr = pred.dataSync();
+            arr = Array.from(arr);
+            return arr;
+        })
+        return d;
+    }
+
+    predictDecoder(x){
+        const d = tf.tidy(() => {  
+            const x_tensor= tf.tensor(x,[1,x.length]);
+            var pred = this.decoder.predict(x_tensor);
             var arr = pred.dataSync();
             arr = Array.from(arr);
             return arr;
