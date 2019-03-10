@@ -23,21 +23,16 @@ class ImageComponent extends Component {
     }
 
     reshape = (data) =>{
-        var pixelData1 = new Array();
-        var pixelData2 = new Array();
+        var pixelData = [];
         for (var x=0; x<this.state.width; x++) {
-            pixelData1[x] = new Array();
-            pixelData2[x] = new Array();
+            pixelData[x] = [];
             for (var y=0; y<this.state.height; y++) {
-                pixelData1[x][y] = {r:Math.floor(data[this.state.height*y+x]*255.0),
-                                   g:Math.floor(data[this.state.height*y+x]*255.0),
-                                   b:Math.floor(data[this.state.height*y+x]*255.0)};
-                pixelData2[x][y] = "rgb("+pixelData1[x][y].r+","+
-                                          pixelData1[x][y].g+","+
-                                          pixelData1[x][y].b+")";
+                pixelData[x][y] = "rgb("+Math.floor(data[this.state.height*y+x]*255.0)+","+
+                Math.floor(data[this.state.height*y+x]*255.0)+","+
+                Math.floor(data[this.state.height*y+x]*255.0)+")";
             }
         }
-        return pixelData2
+        return pixelData
     }
 
     showImage = (data) => {
@@ -65,7 +60,6 @@ class ImageComponent extends Component {
       );
     }
   }
-
       
   const canvasDiv = {
     border: '1px solid #d3d3d3',

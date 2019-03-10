@@ -49,10 +49,8 @@ export default class Model {
     }
 
     trainModel(x,callback){
-        console.log(x);
         tf.tidy(() => {
             const x_train = tf.tensor(x,[x.length,x[0].length]);
-
             this.autoencoder.compile({optimizer: tf.train.adadelta(), loss: 'meanSquaredError'});
             this.autoencoder.fit(x_train,x_train, {
                 batchSize: 128,
@@ -64,7 +62,6 @@ export default class Model {
     }
 
     predict(x){
-
         const d = tf.tidy(() => {  
             const x_tensor= tf.tensor(x,[1,x.length]);
             var pred = this.autoencoder.predict(x_tensor);
@@ -72,7 +69,6 @@ export default class Model {
             arr = Array.from(arr);
             return arr;
         })
-
         return d;
     }
 

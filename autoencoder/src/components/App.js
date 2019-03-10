@@ -65,16 +65,27 @@ class App extends Component {
   }
 
   createSliders = () => {
-
+    const numCols = 8;
+    const numRows = Math.ceil(this.state.decoderInput.length/numCols);
+    var sliders = [];
+    for (let i=0;i<numRows;i++){
+      const rowOfSliders = [];
+      for (let j = i*numCols; j < (i+1)*numCols; j++) {
+        if (j>this.state.decoderInput.length){
+          rowOfSliders.push(<Col></Col>)
+        } else {
+          rowOfSliders.push(<Col><Slider id={j} value={this.state.decoderInput[j]} onSlide={this.updateDecoderInput} min={0} max={20}/></Col>)
+        }
+      }
+      sliders.push(<Row>{rowOfSliders}</Row>);
+    }
+    return sliders;
   }
 
   render() {
     let sliders;
     if (!!this.state.decoderInput){
-      sliders = this.state.decoderInput.map((item,index)=>{
-          return (
-            <Col><Slider id={index} value={this.state.decoderInput[index]} onSlide={this.updateDecoderInput} min={0} max={20}/></Col>
-          )});
+        sliders = this.createSliders();
     } else {
       sliders = null;
     }
@@ -93,8 +104,6 @@ class App extends Component {
           </Row>
           <Row>
             {sliders}
-            {false ? <Col><Slider id={0} value={this.state.decoderInput[0]} onSlide={this.updateDecoderInput} min={0} max={50}/></Col>:null}
-
           </Row>
         </Container>
         </div>
