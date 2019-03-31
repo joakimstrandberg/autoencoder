@@ -25,4 +25,6 @@ app.get('/',(req,res) => {
 //Make models directory accessable
 app.use(express.static(path.join(__dirname, 'models')))
 
-var server=app.listen(API_PORT,function() {});
+var server = app.listen(API_PORT,() => {
+  console.log(`Server started at port: ${API_PORT}`);
+});
