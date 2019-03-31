@@ -72,9 +72,9 @@ class App extends Component {
       const rowOfSliders = [];
       for (let j = i*numCols; j < (i+1)*numCols; j++) {
         if (j>this.state.decoderInput.length){
-          rowOfSliders.push(<Col></Col>)
+          rowOfSliders.push(<Col className='slider-col'></Col>)
         } else {
-          rowOfSliders.push(<Col><Slider id={j} value={this.state.decoderInput[j]} onSlide={this.updateDecoderInput} min={0} max={20}/></Col>)
+          rowOfSliders.push(<Col className='slider-col'><Slider id={j} value={this.state.decoderInput[j]} onSlide={this.updateDecoderInput} min={0} max={20}/></Col>)
         }
       }
       sliders.push(<Row>{rowOfSliders}</Row>);
@@ -102,9 +102,7 @@ class App extends Component {
           <Row>
             <Col style={{margin: '1em auto'}}><Button onClick={() => this.fetchDigit()} color="danger">New digit</Button></Col>
           </Row>
-          <Row>
-            {sliders}
-          </Row>
+          {sliders}
         </Container>
         </div>
       </div>
