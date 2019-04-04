@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import '../style/App.css';
 import update from 'immutability-helper';
+import {mnistModelsPath} from "../constants.js";
 
 import { Button, Container, Row, Col  } from 'reactstrap';
 import ImageComponent from './ImageComponent';
@@ -26,7 +27,7 @@ class App extends Component {
   componentDidMount(){
     //Instantiate model
     const model = new Model([28,28]);
-    model.loadModel(()=>
+    model.loadModel(mnistModelsPath,()=>
       this.setState({model:model},() => {
         this.setState({modelIsLoaded:true}, () => {
           //this.fetchDigit();
@@ -60,7 +61,6 @@ class App extends Component {
     this.setState({decoderInput:newInput},() => {
       const decoderOutput = this.state.model.predictDecoder(this.state.decoderInput);
       this.setState({predDigit:decoderOutput});
-      
     });
   }
 

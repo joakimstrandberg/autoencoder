@@ -1,0 +1,1 @@
+export const mnistModelsPath = "http://localhost:5000/models/mnist/";

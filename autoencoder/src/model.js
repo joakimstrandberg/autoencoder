@@ -9,43 +9,23 @@ export default class Model {
     }
 
     //Make this a promise
-    loadModel(callback){
-        tf.loadLayersModel('http://localhost:5000/autoencoder/model.json').then(res => {
+    loadModel(path,callback){
+        tf.loadLayersModel(path + 'autoencoder/model.json').then(res => {
             this.autoencoder = res;
         }).catch(err => {
             console.log(err);
         });
-        tf.loadLayersModel('http://localhost:5000/decoder/model.json').then(res => {
+        tf.loadLayersModel(path + 'decoder/model.json').then(res => {
             this.decoder = res;
         }).catch(err => {
             console.log(err);
         });
-        tf.loadLayersModel('http://localhost:5000/encoder/model.json').then(res => {
+        tf.loadLayersModel(path + 'encoder/model.json').then(res => {
             this.encoder = res;
         }).catch(err => {
             console.log(err);
         });
         callback();
-    }
-
-    buildModel(){
-        const latentSize = 100;
-            const flatShape = this.inputShape[0]*this.inputShape[1];
-            const input = tf.input({shape: [flatShape]});
-            const encoded = tf.layers.dense({units: latentSize, activation: 'relu'});
-            const decoded = tf.layers.dense({units: flatShape, activation: 'relu'});
-
-            const autoencoder = tf.model({inputs: input, outputs: decoded.apply(encoded.apply(input))});
-            /*
-            const encoder = tf.model({inputs: input, outputs: encoded.apply(input)});
-            
-            const input_decoder = tf.input({shape: [latentSize]});
-            const decoder = tf.model({inputs: input_decoder, outputs: autoencoder.getLayer("dense_Dense2").apply(input_decoder)});
-
-            this.encoder = encoder;
-            this.decoder = decoder;*/
-            this.autoencoder = autoencoder;
-            console.log(autoencoder.summary())
     }
 
     trainModel(x,callback){

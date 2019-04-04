@@ -45,11 +45,7 @@ autoencoder.fit(x_train, x_train,
                 shuffle=True,
                 validation_data=(x_test, x_test))
 
-import tensorflowjs as tfjs
-tfjs.converters.save_keras_model(autoencoder, "./backend/models/autoencoder")
-tfjs.converters.save_keras_model(decoder, "./backend/models/decoder")
-tfjs.converters.save_keras_model(encoder, "./backend/models/encoder")
-
+encoder.save("mnist_encoder.h5")
 # encode and decode some digits
 # note that we take them from the *test* set
 encoded_imgs = encoder.predict(x_test)
