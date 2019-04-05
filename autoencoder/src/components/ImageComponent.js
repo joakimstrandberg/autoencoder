@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 
+//TODO: should have fixed size
 class ImageComponent extends Component {
     constructor(props) {
         super(props);

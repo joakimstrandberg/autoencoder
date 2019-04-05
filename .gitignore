@@ -1,3 +1,12 @@
+#own ignores
+model_api/models
+model_api/data
+keras_model/celeba-dataset
+*.h5
+*.pyc
+backend/data
+
+
 # Logs
 logs
 *.log
