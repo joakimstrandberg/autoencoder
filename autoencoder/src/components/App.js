@@ -3,7 +3,7 @@ import '../style/App.css';
 import update from 'immutability-helper';
 import {mnistModelsPath} from "../constants.js";
 
-import { Button, Container, Row, Col  } from 'reactstrap';
+import { Button, Container, Row, Col} from 'reactstrap';
 import ImageComponent from './ImageComponent';
 import Slider from './Slider';
 import Model from '../model.js';

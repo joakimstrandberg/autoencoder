@@ -2,8 +2,8 @@
 
 from keras.layers import Input, Dense
 from keras.models import Model
+from build_models import build_tfjs_models
 
-# this is the size of our encoded representations
 encoding_dim = 32  # 32 floats -> compression of factor 24.5, assuming the input is 784 floats
 
 # this is our input placeholder
@@ -51,6 +51,7 @@ encoder.save("mnist_encoder.h5")
 encoded_imgs = encoder.predict(x_test)
 decoded_imgs = decoder.predict(encoded_imgs)
 
+build_tfjs_models("../model_api/models/mnist/",autoencoder,encoder,decoder)
 # use Matplotlib (don't ask)
 import matplotlib.pyplot as plt
 
