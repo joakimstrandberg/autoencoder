@@ -16,13 +16,15 @@ def sort_pc(encoder,data):
     sorted_ix = np.argsort(variance)[::-1]
     return sorted_ix
 
-def fetch_rnd_digit():
-    data = np.load("./data/mnist_train.npy")
+def fetch_rnd_digit(data):
+    #data = np.load("./data/mnist_data.npy")
     print(data.shape)
-    ix = np.random.choice(data.shape[0], 3)
+    ix = np.random.choice(data.shape[0], 1)
     digit = data[ix,:]
     return digit.tolist()
 
+
+# === Methods for creating mnist numpy file
 def load_data():
     (x_train, _), (x_test, _) = mnist.load_data()
     x_train = x_train.reshape((len(x_train), np.prod(x_train.shape[1:])))
@@ -35,4 +37,4 @@ def save_data(data, path):
 
 if __name__ == "__main__":
     data = load_data()
-    save_data(data,"./data/mnist_train")
+    save_data(data,"./data/mnist_data")

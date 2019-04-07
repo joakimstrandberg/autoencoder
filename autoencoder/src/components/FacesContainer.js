@@ -9,7 +9,7 @@ import Slider from './Slider';
 import Model from '../model.js';
 var mnist = require('mnist');
 
-class MnistContainer extends Component {
+class FacesContainer extends Component {
     constructor(props) {
       super(props);
       this.state = {
@@ -51,7 +51,7 @@ class MnistContainer extends Component {
         });
     }
     
-    fetchDigit = () => {
+    fetchData = () => {
       //let num = Math.floor(Math.random() * 10);
       //var dig = mnist[num].get();
       fetch("http://localhost:5000/api/mnist/fetch-digit")
@@ -138,5 +138,5 @@ class MnistContainer extends Component {
     padding: '1em',
   }
   
-  export default MnistContainer;
+  export default FacesContainer;
   
