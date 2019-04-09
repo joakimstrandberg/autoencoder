@@ -23,7 +23,6 @@ def fetch_rnd_digit(data):
     digit = data[ix,:]
     return digit.tolist()
 
-
 # === Methods for creating mnist numpy file
 def load_data():
     (x_train, _), (x_test, _) = mnist.load_data()

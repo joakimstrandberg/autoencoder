@@ -54,7 +54,6 @@ def build_encoder_decoder(autoencoder):
     return (encoder,decoder)
 
 def build_tfjs_models(build_path,ae,en,de):
-    #"./models/faces/autoencodbuild_pather"
     tfjs.converters.save_keras_model(ae, build_path+"autoencoder/")
     tfjs.converters.save_keras_model(de, build_path+"decoder/")
     tfjs.converters.save_keras_model(en, build_path+"encoder/")
