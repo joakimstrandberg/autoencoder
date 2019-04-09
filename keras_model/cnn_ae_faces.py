@@ -65,7 +65,7 @@ autoencoder.save("ae_faces.h5")
 encoder.save("encoder_faces.h5")
 decoder.save("decoder_faces.h5")
 #'''
-#train loop since large dataset
+#train on batch loop since large dataset
 NUM_VAL_DATA = 50
 val_data = fetch_batch(archive_path,IMG_WIDTH,IMG_HEIGHT,IMG_CHANNELS, 1,1+NUM_VAL_DATA)
 val_data = val_data/255

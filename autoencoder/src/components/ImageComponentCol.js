@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 
 //TODO: should have fixed size
+
 class ImageComponentCol extends Component {
     constructor(props) {
         super(props);
         this.state = {
             scale: 10,
-            height: 28,
-            width: 28
+            height: 64,
+            width: 64
         };
     }
 
@@ -25,14 +26,15 @@ class ImageComponentCol extends Component {
 
     reshape = (data) =>{
         var pixelData = [];
-        for (var x=0; x<this.props.width; x++) {
-            pixelData[x] = [];
+        for (var x=0; x < data.length; x++) {
+            pixelData[x] = []
             for (var y=0; y<this.props.height; y++) {
-                pixelData[x][y] = "rgb("+Math.floor(data[this.props.height*y+x]*255.0)+","+
-                Math.floor(data[this.props.height*y+x]*255.0)+","+
-                Math.floor(data[this.props.height*y+x]*255.0)+")";
+                pixelData[x][y] = "rgb("+Math.floor(data[0][x][y]*255.0)+","+
+                Math.floor(data[0][x][y][1]*255.0)+","+
+                Math.floor(data[0][x][y][2]*255.0)+")";
             }
         }
+
         return pixelData
     }
 
@@ -43,7 +45,7 @@ class ImageComponentCol extends Component {
         c.width = this.props.width*this.props.scale;
         c.height = this.props.height*this.props.scale;
         var ctx = c.getContext("2d");
-
+        console.log(pixelData[0][0])
         for (var x=0; x<this.state.width; x++) {
             for (var y=0; y<this.props.height; y++) {
                 ctx.fillStyle = pixelData[x][y];

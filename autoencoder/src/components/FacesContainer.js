@@ -1,38 +1,35 @@
 import React, { Component } from 'react';
 import '../style/App.css';
 import update from 'immutability-helper';
-import {mnistModelsPath} from "../constants.js";
+import {facesModelsPath} from "../constants.js";
 
 import { Button, Container, Row, Col} from 'reactstrap';
-import ImageComponent from './ImageComponent';
+import ImageComponentCol from './ImageComponentCol';
 import Slider from './Slider';
 import Model from '../model.js';
-var mnist = require('mnist');
 
 class FacesContainer extends Component {
     constructor(props) {
       super(props);
       this.state = {
-        digit: null,
-        predDigit: null,
+        sample: null,
+        decoderOutput: null,
         model: null,
         train: null,
         test: null,
         modelIsLoaded: false,
         decoderInput: null,
-        encoderOutout: null,
-        pcOrder: null
+        encoderOutput: null,
+        pcOrder: [...Array(200).keys()]
       };
     }
   
     componentDidMount(){
       //Instantiate model
-      const model = new Model([28,28]);
-      model.loadModel(mnistModelsPath,()=>
+      const model = new Model([64,64]);
+      model.loadModel(facesModelsPath,()=>
         this.setState({model:model},() => {
           this.setState({modelIsLoaded:true}, () => {
-            //this.fetchDigit();
-            this.fetchPcOrder();
             console.log("State",this.state);
           });
         })
@@ -40,7 +37,7 @@ class FacesContainer extends Component {
     }
 
     fetchPcOrder = () => {
-      fetch("http://localhost:5000/api/mnist/fetch-pc-order")
+      fetch("http://localhost:5000/")
         .then(res => res.json())
         .then( result => {
           console.log(result)
@@ -54,12 +51,12 @@ class FacesContainer extends Component {
     fetchData = () => {
       //let num = Math.floor(Math.random() * 10);
       //var dig = mnist[num].get();
-      fetch("http://localhost:5000/api/mnist/fetch-digit")
+      fetch("http://localhost:5000/api/mnist/fetch-face")
         .then(res => res.json())
         .then( result => {
           console.log(result)
-          this.setState({digit: result[0]}, () => {
-            this.predictDigit();
+          this.setState({sample: result[0]}, () => {
+            this.predict();
           });
         })
         .catch(err=> {
@@ -67,22 +64,22 @@ class FacesContainer extends Component {
         });
     }
   
-    predictDigit = () => {
-      const predDigit = this.state.model.predict(this.state.digit);
-      this.setState({predDigit:predDigit});
+    predict = () => {
+      const decoderOutput = this.state.model.predict(this.state.sample);
+      this.setState({decoderOutput:decoderOutput});
       this.getEncoderOutput();
     }
   
     getEncoderOutput = () => {
-      const encoderOutout = this.state.model.predictEncoder(this.state.digit);
-      this.setState({encoderOutout:encoderOutout},this.setState({decoderInput:encoderOutout}));
+      const encoderOutput = this.state.model.predictEncoder(this.state.sample);
+      this.setState({encoderOutput:encoderOutput},this.setState({decoderInput:encoderOutput}));
     }
   
     updateDecoderInput = (index,data) => {
       const newInput = update(this.state.decoderInput, {[index]: {$set: parseFloat(data.target.value)}});
       this.setState({decoderInput:newInput},() => {
         const decoderOutput = this.state.model.predictDecoder(this.state.decoderInput);
-        this.setState({predDigit:decoderOutput});
+        this.setState({decoderOutput:decoderOutput});
       });
     }
   
@@ -118,11 +115,11 @@ class FacesContainer extends Component {
           <div className="container" style={appDiv}>
           <Container>
             <Row>
-              <Col><ImageComponent id={"inputCanvas"} name={"Input image"} data={this.state.digit}/></Col>
-              <Col><ImageComponent id={"predCanvas"} name={"Output image"} data={this.state.predDigit}/></Col>
+              <Col><ImageComponentCol id={"inputCanvas"} name={"Input image"} data={this.state.sample} width={64} height={64} channels={3} /></Col>
+              <Col><ImageComponentCol id={"predCanvas"} name={"Output image"} data={this.state.decoderOutput} width={64} height={64} channels={3}/></Col>
             </Row>
             <Row>
-              <Col style={{margin: '1em auto'}}><Button onClick={() => this.fetchDigit()} color="danger">New digit</Button></Col>
+              <Col style={{margin: '1em auto'}}><Button onClick={() => this.fetchData()} color="danger">New face</Button></Col>
             </Row>
             <Row><h4 style={{margin: '1em auto'}}>Latent features</h4></Row>
             {sliders}

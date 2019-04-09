@@ -9,6 +9,9 @@ import Slider from './Slider';
 import Model from '../model.js';
 var mnist = require('mnist');
 
+/*TODO: fix fetchdigit when component mounts. 
+  TODO: 
+*/
 class MnistContainer extends Component {
     constructor(props) {
       super(props);

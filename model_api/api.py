@@ -1,6 +1,7 @@
 from flask import Flask, request, send_from_directory, jsonify
 from flask_cors import CORS
 from mnist_handlers import sort_pc, fetch_rnd_digit, load_data
+from faces_handlers import fetch_rnd_face
 
 from keras.models import Model, load_model
 import numpy as np
@@ -20,6 +21,11 @@ CORS(app)
 def index():
     return "hello"
 
+@app.route('/<path:path>')
+def fetch_model(path):
+    return app.send_static_file(path)
+
+#TODO: Add min max values for each principal component
 #========= Methods for mnist methods =========
 def load_mnist_encoder():
     global mnist_encoder 
@@ -28,12 +34,6 @@ def load_mnist_encoder():
     mnist_encoder.summary()
     global mnist_data
     mnist_data = np.load("./data/mnist_data.npy")
-
-@app.route('/<path:path>')
-def fetch_model(path):
-    print(path)
-    #"/models/faces/autoencoder/test.json"
-    return app.send_static_file(path)
 
 @app.route('/api/mnist/fetch-digit',methods=["GET"])
 def fetch_digit():
@@ -53,12 +53,15 @@ def fetch_pc_order():
     global mnist_pc_order
     return jsonify(mnist_pc_order)
 
+#========= Methods for faces methods =========
+@app.route('/api/mnist/fetch-face',methods=["GET"])
+def fetch_face():
+    face = fetch_rnd_face()
+    return jsonify(face)
+
 print(__name__)
 if __name__ == "api":
     print("Starting server..")
     print("Loading mnist encoder...")
     load_mnist_encoder()
     graph = tf.get_default_graph()
-
-
-#========= Methods for faces methods =========
