@@ -49,8 +49,10 @@ def build_encoder_decoder(autoencoder):
         print(layer)
         d = autoencoder.get_layer(layer)(d)
     decoder = Model(inputs=decoder_input,outputs=d)
+    autoencoder.summary()
     decoder.summary()
     encoder.summary()
+    autoencoder.compile(optimizer='adadelta', loss='binary_crossentropy')
     return (encoder,decoder)
 
 def build_tfjs_models(build_path,ae,en,de):

@@ -15,8 +15,6 @@ class FacesContainer extends Component {
         sample: null,
         decoderOutput: null,
         model: null,
-        train: null,
-        test: null,
         modelIsLoaded: false,
         decoderInput: null,
         encoderOutput: null,
@@ -49,8 +47,6 @@ class FacesContainer extends Component {
     }
     
     fetchData = () => {
-      //let num = Math.floor(Math.random() * 10);
-      //var dig = mnist[num].get();
       fetch("http://localhost:5000/api/mnist/fetch-face")
         .then(res => res.json())
         .then( result => {
@@ -66,20 +62,26 @@ class FacesContainer extends Component {
   
     predict = () => {
       const decoderOutput = this.state.model.predict(this.state.sample);
-      this.setState({decoderOutput:decoderOutput});
+      this.setState({decoderOutput:decoderOutput},() =>{
+        console.log(this.state);
+      });
       this.getEncoderOutput();
     }
   
     getEncoderOutput = () => {
       const encoderOutput = this.state.model.predictEncoder(this.state.sample);
-      this.setState({encoderOutput:encoderOutput},this.setState({decoderInput:encoderOutput}));
+      this.setState({encoderOutput:encoderOutput},() => console.log("enc out", this.state));
+      this.setState({decoderInput:encoderOutput});
     }
   
     updateDecoderInput = (index,data) => {
+      //Update state of the decoder input array element corresponding do slider
       const newInput = update(this.state.decoderInput, {[index]: {$set: parseFloat(data.target.value)}});
       this.setState({decoderInput:newInput},() => {
         const decoderOutput = this.state.model.predictDecoder(this.state.decoderInput);
-        this.setState({decoderOutput:decoderOutput});
+        this.setState({decoderOutput:decoderOutput}, () => {
+          console.log("DECODER OUTPUT", this.state);
+        });
       });
     }
   
@@ -115,8 +117,8 @@ class FacesContainer extends Component {
           <div className="container" style={appDiv}>
           <Container>
             <Row>
-              <Col><ImageComponentCol id={"inputCanvas"} name={"Input image"} data={this.state.sample} width={64} height={64} channels={3} /></Col>
-              <Col><ImageComponentCol id={"predCanvas"} name={"Output image"} data={this.state.decoderOutput} width={64} height={64} channels={3}/></Col>
+              <Col><ImageComponentCol id={"inputCanvas"} name={"Input image"} data={this.state.sample} width={64} height={64} channels={3} scale={5}/></Col>
+              <Col><ImageComponentCol id={"predCanvas"} name={"Output image"} data={this.state.decoderOutput} width={64} height={64} channels={3} scale={5}/></Col>
             </Row>
             <Row>
               <Col style={{margin: '1em auto'}}><Button onClick={() => this.fetchData()} color="danger">New face</Button></Col>

@@ -1,5 +1,5 @@
-import * as tf from '@tensorflow/tfjs';
-import { timeDistributed } from '@tensorflow/tfjs-layers/dist/exports_layers';
+import * as tf from '@tensorflow/tfjs'
+//import * as tf from '@tensorflow/tfjs-node-gpu'
 
 export default class Model {
     constructor(inputShape){
@@ -16,18 +16,18 @@ export default class Model {
 
     //Make this a promise
     loadModel(path,callback){
-        tf.loadLayersModel(path + 'autoencoder/model.json',{strict:false}).then(res => {
+        tf.loadLayersModel(path + 'autoencoder/model.json',{strict:true}).then(res => {
             this.autoencoder = res;
             this.getInputShape();
         }).catch(err => {
             console.log(err);
         });
-        tf.loadLayersModel(path + 'decoder/model.json',{strict:false}).then(res => {
+        tf.loadLayersModel(path + 'decoder/model.json',{strict:true}).then(res => {
             this.decoder = res;
         }).catch(err => {
             console.log(err);
         });
-        tf.loadLayersModel(path + 'encoder/model.json',{strict:false}).then(res => {
+        tf.loadLayersModel(path + 'encoder/model.json',{strict:true}).then(res => {
             this.encoder = res;
         }).catch(err => {
             console.log(err);
@@ -42,7 +42,7 @@ export default class Model {
             shape.unshift(1);
             const x_tensor= tf.tensor([x]);
             var pred = this.autoencoder.predict(x_tensor);
-            var arr = pred.arraySync();
+            var arr = pred.arraySync()[0];
             //arr = Array.from(arr);
             return arr;
         })
@@ -54,8 +54,9 @@ export default class Model {
         const d = tf.tidy(() => {  
             const x_tensor= tf.tensor([x]);
             var pred = this.encoder.predict(x_tensor);
-            var arr = pred.dataSync();
-            arr = Array.from(arr);
+            pred.print();
+            var arr = pred.arraySync()[0];
+            //arr = Array.from(arr);
             return arr;
         })
         return d;
@@ -65,8 +66,8 @@ export default class Model {
         const d = tf.tidy(() => {  
             const x_tensor= tf.tensor(x,[1,x.length]);
             var pred = this.decoder.predict(x_tensor);
-            var arr = pred.dataSync();
-            arr = Array.from(arr);
+            var arr = pred.arraySync()[0];
+            //arr = Array.from(arr);
             return arr;
         })
         return d;
