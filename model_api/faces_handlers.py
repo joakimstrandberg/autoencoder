@@ -10,7 +10,7 @@ from zipfile import ZipFile
 
 #CONFIG
 ARCHIVE_PATH = "../keras_model/celeba-dataset/img_align_celeba.zip"
-NUM_OBSERVATIONS = 20000
+NUM_OBSERVATIONS = 15000
 IMG_WIDTH = 64 #int(178/2)
 IMG_HEIGHT = 64 #int(218/2)
 IMG_CHANNELS = 3
@@ -32,7 +32,7 @@ def fetch_batch(path,w,h,c,start,end):
                 img = resize(img,w,h)
                 img_arr = np.asarray(img)
                 data[i,:,:,:] = img_arr.astype(np.uint8)[:,:,:]
-    return data
+    return data/255
 
 def fetch_rnd_face():
     ix = np.random.choice(NUM_OBSERVATIONS, 1)[0]

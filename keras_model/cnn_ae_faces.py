@@ -10,7 +10,7 @@ import numpy as np
 from PIL import Image
 from zipfile import ZipFile
 
-from build_models import build_cnn_ae, build_encoder_decoder, build_tfjs_models
+from build_models import build_cnn_ae, build_encoder_decoder
 
 # ========== CONFIG VARIABLES ==============
 archive_path = "celeba-dataset/img_align_celeba.zip"
@@ -42,7 +42,7 @@ def fetch_batch(path,w,h,c, start,end):
     return data
 
 #========================== Build models ==============================
-autoencoder = build_cnn_ae((IMG_HEIGHT,IMG_WIDTH,IMG_CHANNELS),ENCODED_DIM)
+#autoencoder = build_cnn_ae((IMG_HEIGHT,IMG_WIDTH,IMG_CHANNELS),ENCODED_DIM)
 #========================== Train model ===============================
 
 '''#Not suitable since large dataset
@@ -92,15 +92,46 @@ for e in range(EPOCHS):
     k += 1
 
 #'''
-autoencoder = load_model("finished_ae_v2.h5")
-#Build encoder and decoder from trained autoencoder
+import keras
+import tensorflowjs as tfjs
+'''
+#Load models and convert them into tfjs models. Must be done one at a time since layers mismatch with werights in same session!!!
+build_path = "../model_api/models/faces/light_model/"
+keras.backend.clear_session()
+autoencoder = load_model("finished_ae_v4.h5")
+tfjs.converters.save_keras_model(autoencoder, build_path+"autoencoder/")
+
+keras.backend.clear_session()
+encoder = load_model("finished_e_v4.h5")
+tfjs.converters.save_keras_model(encoder, build_path+"encoder/")
+
+keras.backend.clear_session()
+decoder = load_model("finished_d_v4.h5")
+tfjs.converters.save_keras_model(decoder, build_path+"decoder/")
+#'''
+
+#'''
+keras.backend.clear_session()
+autoencoder = load_model("finished_ae_v4.h5")
 encoder, decoder = build_encoder_decoder(autoencoder)
-#Build tfjs models in models folder
-build_tfjs_models("../model_api/models/faces/",autoencoder,encoder,decoder)
+#'''
 
 #Show prediction
+#'''
 img_ix = 11
 pred = autoencoder.predict(val_data[np.newaxis,img_ix,:,:,:])
+pred = pred.reshape(pred.shape[-3],pred.shape[-2],pred.shape[-1])
+pred = pred *255
+pred_img = Image.fromarray(pred.astype(np.uint8), 'RGB')
+pred_img.show()
+tr_arr = val_data[img_ix,:,:,:]*255
+true_img = Image.fromarray(tr_arr.astype(np.uint8), "RGB")
+true_img.show()
+#'''
+img_ix = 11
+latent = encoder.predict(val_data[np.newaxis,img_ix,:,:,:])
+print(latent)
+pred = decoder.predict(latent)
 pred = pred.reshape(pred.shape[-3],pred.shape[-2],pred.shape[-1])
 pred = pred *255
 pred_img = Image.fromarray(pred.astype(np.uint8), 'RGB')
