@@ -7,7 +7,6 @@ import { Button, Container, Row, Col} from 'reactstrap';
 import ImageComponent from './ImageComponent';
 import Slider from './Slider';
 import Model from '../model.js';
-var mnist = require('mnist');
 
 /*TODO: fix fetchdigit when component mounts. 
   TODO: 
@@ -19,8 +18,6 @@ class MnistContainer extends Component {
         digit: null,
         predDigit: null,
         model: null,
-        train: null,
-        test: null,
         modelIsLoaded: false,
         decoderInput: null,
         encoderOutout: null,
@@ -30,13 +27,12 @@ class MnistContainer extends Component {
   
     componentDidMount(){
       //Instantiate model
-      const model = new Model([28,28]);
+      console.log(this.state)
+      const model = new Model();
       model.loadModel(mnistModelsPath,()=>
         this.setState({model:model},() => {
           this.setState({modelIsLoaded:true}, () => {
-            //this.fetchDigit();
             this.fetchPcOrder();
-            console.log("State",this.state);
           });
         })
       );
@@ -46,7 +42,6 @@ class MnistContainer extends Component {
       fetch("http://localhost:5000/api/mnist/fetch-pc-order")
         .then(res => res.json())
         .then( result => {
-          console.log(result)
           this.setState({pcOrder: result});
         })
         .catch(err=> {
@@ -55,12 +50,9 @@ class MnistContainer extends Component {
     }
     
     fetchDigit = () => {
-      //let num = Math.floor(Math.random() * 10);
-      //var dig = mnist[num].get();
       fetch("http://localhost:5000/api/mnist/fetch-digit")
         .then(res => res.json())
         .then( result => {
-          console.log(result)
           this.setState({digit: result[0]}, () => {
             this.predictDigit();
           });
@@ -125,7 +117,8 @@ class MnistContainer extends Component {
               <Col><ImageComponent id={"predCanvas"} name={"Output image"} data={this.state.predDigit}/></Col>
             </Row>
             <Row>
-              <Col style={{margin: '1em auto'}}><Button onClick={() => this.fetchDigit()} color="danger">New digit</Button></Col>
+              <Col style={{margin: '1em auto'}}><Button onClick={() => this.fetchDigit()} color="danger" disabled={!!this.state.modelIsLoaded? false : true}>New Input</Button></Col>
+              <Col style={{margin: '1em auto'}}><Button onClick={() => this.predictDigit()} color="primary"  disabled={!!this.state.digit? false : true} >Reset</Button></Col>
             </Row>
             <Row><h4 style={{margin: '1em auto'}}>Latent features</h4></Row>
             {sliders}

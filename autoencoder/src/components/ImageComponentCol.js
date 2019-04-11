@@ -35,18 +35,15 @@ class ImageComponentCol extends Component {
                 Math.floor(data[0][x][y][2]*255.0)+")";
             }
         }
-
         return pixelData
     }
 
     showImage = (data) => {
         if(data === undefined){return}
-        //var pixelData = this.reshape(data);
         var c = document.getElementById(this.props.id);
         c.width = this.props.width*this.props.scale;
         c.height = this.props.height*this.props.scale;
         var ctx = c.getContext("2d");
-        //console.log(pixelData[0][0])
         for (var x=0; x<this.state.width; x++) {
             for (var y=0; y<this.props.height; y++) {
                 ctx.fillStyle ="rgb("+Math.floor(data[y][x][0]*255.0)+","+
