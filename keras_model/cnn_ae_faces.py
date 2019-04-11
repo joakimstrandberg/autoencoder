@@ -94,25 +94,25 @@ for e in range(EPOCHS):
 #'''
 import keras
 import tensorflowjs as tfjs
-'''
+#'''
 #Load models and convert them into tfjs models. Must be done one at a time since layers mismatch with werights in same session!!!
 build_path = "../model_api/models/faces/light_model/"
 keras.backend.clear_session()
-autoencoder = load_model("finished_ae_v4.h5")
+autoencoder = load_model("finished_ae_v6.h5")
 tfjs.converters.save_keras_model(autoencoder, build_path+"autoencoder/")
 
 keras.backend.clear_session()
-encoder = load_model("finished_e_v4.h5")
+encoder = load_model("finished_e_v6.h5")
 tfjs.converters.save_keras_model(encoder, build_path+"encoder/")
 
 keras.backend.clear_session()
-decoder = load_model("finished_d_v4.h5")
+decoder = load_model("finished_d_v6.h5")
 tfjs.converters.save_keras_model(decoder, build_path+"decoder/")
 #'''
 
-#'''
+'''
 keras.backend.clear_session()
-autoencoder = load_model("finished_ae_v4.h5")
+autoencoder = load_model("finished_ae_v5.h5")
 encoder, decoder = build_encoder_decoder(autoencoder)
 #'''
 

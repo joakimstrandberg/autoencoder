@@ -24,7 +24,8 @@ class FacesContainer extends Component {
   
     componentDidMount(){
       //Instantiate model
-      const model = new Model([64,64]);
+      console.log(this.state)
+      const model = new Model();
       model.loadModel(facesModelsPath,()=>
         this.setState({model:model},() => {
           this.setState({modelIsLoaded:true}, () => {
@@ -38,7 +39,6 @@ class FacesContainer extends Component {
       fetch("http://localhost:5000/")
         .then(res => res.json())
         .then( result => {
-          console.log(result)
           this.setState({pcOrder: result});
         })
         .catch(err=> {
@@ -50,7 +50,6 @@ class FacesContainer extends Component {
       fetch("http://localhost:5000/api/mnist/fetch-face")
         .then(res => res.json())
         .then( result => {
-          console.log(result)
           this.setState({sample: result[0]}, () => {
             this.predict();
           });
@@ -63,7 +62,6 @@ class FacesContainer extends Component {
     predict = () => {
       const decoderOutput = this.state.model.predict(this.state.sample);
       this.setState({decoderOutput:decoderOutput},() =>{
-        console.log(this.state);
       });
       this.getEncoderOutput();
     }
@@ -80,7 +78,6 @@ class FacesContainer extends Component {
       this.setState({decoderInput:newInput},() => {
         const decoderOutput = this.state.model.predictDecoder(this.state.decoderInput);
         this.setState({decoderOutput:decoderOutput}, () => {
-          console.log("DECODER OUTPUT", this.state);
         });
       });
     }
@@ -95,7 +92,7 @@ class FacesContainer extends Component {
           if (j>this.state.decoderInput.length){
             rowOfSliders.push(<Col className='slider-col'></Col>)
           } else {
-            rowOfSliders.push(<Col className='slider-col'><Slider id={this.state.pcOrder[j]} value={this.state.decoderInput[this.state.pcOrder[j]]} onSlide={this.updateDecoderInput} min={0} max={20}/></Col>)
+            rowOfSliders.push(<Col className='slider-col'><Slider id={this.state.pcOrder[j]} value={this.state.decoderInput[this.state.pcOrder[j]]} onSlide={this.updateDecoderInput} min={0} max={15}/></Col>)
           }
         }
         sliders.push(<Row>{rowOfSliders}</Row>);
@@ -121,7 +118,8 @@ class FacesContainer extends Component {
               <Col><ImageComponentCol id={"predCanvas"} name={"Output image"} data={this.state.decoderOutput} width={64} height={64} channels={3} scale={5}/></Col>
             </Row>
             <Row>
-              <Col style={{margin: '1em auto'}}><Button onClick={() => this.fetchData()} color="danger">New face</Button></Col>
+              <Col style={{margin: '1em auto'}}><Button onClick={() => this.fetchData()} color="danger" disabled={!!this.state.modelIsLoaded? false : true}>New face</Button></Col>
+              <Col style={{margin: '1em auto'}}><Button onClick={() => this.predict()} color="primary"  disabled={!!this.state.sample? false : true} >Reset</Button></Col>
             </Row>
             <Row><h4 style={{margin: '1em auto'}}>Latent features</h4></Row>
             {sliders}

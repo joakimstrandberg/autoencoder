@@ -2,11 +2,11 @@ import * as tf from '@tensorflow/tfjs'
 //import * as tf from '@tensorflow/tfjs-node-gpu'
 
 export default class Model {
-    constructor(inputShape){
+    constructor(){
         this.autoencoder = null;
         this.encoder = null;
         this.decoder = null;
-        this.inputShape = inputShape
+        this.inputShape = null
     }
 
     getInputShape(){
@@ -16,6 +16,7 @@ export default class Model {
 
     //Make this a promise
     loadModel(path,callback){
+        var isError = false;
         tf.loadLayersModel(path + 'autoencoder/model.json',{strict:true}).then(res => {
             this.autoencoder = res;
             this.getInputShape();
@@ -36,17 +37,14 @@ export default class Model {
     }
 
     predict(x){
-        console.log(this.inputShape.slice());
         const d = tf.tidy(() => { 
             var shape = this.inputShape.slice();
             shape.unshift(1);
             const x_tensor= tf.tensor([x]);
             var pred = this.autoencoder.predict(x_tensor);
             var arr = pred.arraySync()[0];
-            //arr = Array.from(arr);
             return arr;
         })
-        console.log("d",d)
         return d;
     }
 
@@ -54,9 +52,7 @@ export default class Model {
         const d = tf.tidy(() => {  
             const x_tensor= tf.tensor([x]);
             var pred = this.encoder.predict(x_tensor);
-            pred.print();
             var arr = pred.arraySync()[0];
-            //arr = Array.from(arr);
             return arr;
         })
         return d;
@@ -67,7 +63,6 @@ export default class Model {
             const x_tensor= tf.tensor(x,[1,x.length]);
             var pred = this.decoder.predict(x_tensor);
             var arr = pred.arraySync()[0];
-            //arr = Array.from(arr);
             return arr;
         })
         return d;
