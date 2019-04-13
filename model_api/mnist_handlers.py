@@ -1,5 +1,6 @@
 from keras.datasets import mnist
 import numpy as np
+from handlers import sort_pc, calc_max, calc_min 
 
 '''
 Method for sorting principal components of the data in the encoded feature space.
@@ -10,11 +11,6 @@ Args:
 Returns:
     Ordered list of indices for 
 '''
-def sort_pc(encoder,data):
-    encoded = encoder.predict(data)
-    variance = np.var(encoded, axis=0)
-    sorted_ix = np.argsort(variance)[::-1]
-    return sorted_ix
 
 def fetch_rnd_digit(data):
     #data = np.load("./data/mnist_data.npy")

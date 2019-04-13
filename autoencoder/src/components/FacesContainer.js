@@ -18,7 +18,10 @@ class FacesContainer extends Component {
         modelIsLoaded: false,
         decoderInput: null,
         encoderOutput: null,
-        pcOrder: [...Array(200).keys()]
+        pcOrder: null,
+        minValues: null,
+        maxValues: null,
+        step: null
       };
     }
   
@@ -29,17 +32,17 @@ class FacesContainer extends Component {
       model.loadModel(facesModelsPath,()=>
         this.setState({model:model},() => {
           this.setState({modelIsLoaded:true}, () => {
-            console.log("State",this.state);
+            this.fetchPcInfo();
           });
         })
       );
     }
 
-    fetchPcOrder = () => {
-      fetch("http://localhost:5000/")
+    fetchPcInfo = () => {
+      fetch("http://localhost:5000/api/faces/fetch-pc-info")
         .then(res => res.json())
         .then( result => {
-          this.setState({pcOrder: result});
+          this.setState({pcOrder: result.order,minValues: result.min,maxValues: result.max,step: result.step});
         })
         .catch(err=> {
             console.log(err);
@@ -68,7 +71,7 @@ class FacesContainer extends Component {
   
     getEncoderOutput = () => {
       const encoderOutput = this.state.model.predictEncoder(this.state.sample);
-      this.setState({encoderOutput:encoderOutput},() => console.log("enc out", this.state));
+      this.setState({encoderOutput:encoderOutput});
       this.setState({decoderInput:encoderOutput});
     }
   
@@ -89,13 +92,13 @@ class FacesContainer extends Component {
       for (let i=0;i<numRows;i++){
         const rowOfSliders = [];
         for (let j = i*numCols; j < (i+1)*numCols; j++) {
-          if (j>this.state.decoderInput.length){
-            rowOfSliders.push(<Col className='slider-col'></Col>)
+          if (j>=this.state.decoderInput.length){
+            rowOfSliders.push(<Col key={-j} className='slider-col'></Col>)
           } else {
-            rowOfSliders.push(<Col className='slider-col'><Slider id={this.state.pcOrder[j]} value={this.state.decoderInput[this.state.pcOrder[j]]} onSlide={this.updateDecoderInput} min={0} max={15}/></Col>)
+            rowOfSliders.push(<Col key={j} className='slider-col'><Slider id={this.state.pcOrder[j]} value={this.state.decoderInput[this.state.pcOrder[j]]} onSlide={this.updateDecoderInput} min={this.state.minValues[j]} max={this.state.maxValues[j]} step={this.state.step[j]}/></Col>)
           }
         }
-        sliders.push(<Row>{rowOfSliders}</Row>);
+        sliders.push(<Row key={i.toString()+"_row"} >{rowOfSliders}</Row>);
       }
       return sliders;
     }

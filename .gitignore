@@ -5,7 +5,7 @@ keras_model/celeba-dataset
 *.h5
 *.pyc
 backend/data
-
+keras_model/
 
 # Logs
 logs
