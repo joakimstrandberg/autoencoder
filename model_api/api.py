@@ -7,8 +7,9 @@ from keras.models import Model, load_model
 import numpy as np
 import tensorflow as tf
 
+from constants.constants import mnist_pc_order, mnist_min, mnist_max, mnist_step, faces_pc_order, faces_min, faces_max, faces_step
+
 #Mnist encoder
-mnist_pc_order = [21,4,13,15,7,2,17,26,1,8,14,3,27,30,28,22,10,29,11,18,24,19,0,12,9,25,23,5,31,6,20,16]
 mnist_encoder = None
 mnist_data = None
 graph = None
@@ -35,6 +36,15 @@ def load_mnist_encoder():
     global mnist_data
     mnist_data = np.load("./data/mnist_data.npy")
 
+@app.route('/api/mnist/fetch-pc-info',methods=["GET"])
+def fetch_mnist_min_max_step():
+    d = {}
+    d["order"] = mnist_pc_order
+    d["min"] = mnist_min
+    d["max"] = mnist_max
+    d["step"] = mnist_step
+    return jsonify(d)
+
 @app.route('/api/mnist/fetch-digit',methods=["GET"])
 def fetch_digit():
     digit = fetch_rnd_digit(mnist_data)
@@ -43,14 +53,6 @@ def fetch_digit():
 #Order should be saved in a global variable?
 @app.route('/api/mnist/fetch-pc-order',methods=["GET"])
 def fetch_pc_order():
-    '''
-    global graph
-    data = np.load("./data/mnist_data.npy")
-    print(data.shape)
-    with graph.as_default():
-        order = sort_pc(mnist_encoder,data)
-    '''
-    global mnist_pc_order
     return jsonify(mnist_pc_order)
 
 #========= Methods for faces methods =========
@@ -59,6 +61,16 @@ def fetch_face():
     face = fetch_rnd_face()
     return jsonify(face)
 
+@app.route('/api/faces/fetch-pc-info',methods=["GET"])
+def fetch_faces_pc_info():
+    d = {}
+    d["order"] = faces_pc_order
+    d["min"] = faces_min
+    d["max"] = faces_max
+    d["step"] = faces_step
+    return jsonify(d)
+
+#==== setup ====
 print(__name__)
 if __name__ == "api":
     print("Starting server..")

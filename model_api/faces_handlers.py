@@ -7,6 +7,7 @@ import numpy as np
 
 from PIL import Image
 from zipfile import ZipFile
+from handlers import sort_pc, calc_max, calc_min 
 
 #CONFIG
 ARCHIVE_PATH = "../keras_model/celeba-dataset/img_align_celeba.zip"
@@ -37,10 +38,4 @@ def fetch_batch(path,w,h,c,start,end):
 def fetch_rnd_face():
     ix = np.random.choice(NUM_OBSERVATIONS, 1)[0]
     data = fetch_batch(ARCHIVE_PATH,IMG_WIDTH,IMG_HEIGHT,IMG_CHANNELS,ix,ix+1)
-    print(data.shape)
     return data.tolist()
-
-#TODO
-def sort_faces_pc():
-    order = []
-    return order

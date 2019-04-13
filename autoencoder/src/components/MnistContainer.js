@@ -21,7 +21,10 @@ class MnistContainer extends Component {
         modelIsLoaded: false,
         decoderInput: null,
         encoderOutout: null,
-        pcOrder: null
+        pcOrder: null,
+        minValues: null,
+        maxValues: null,
+        step: null
       };
     }
   
@@ -32,17 +35,17 @@ class MnistContainer extends Component {
       model.loadModel(mnistModelsPath,()=>
         this.setState({model:model},() => {
           this.setState({modelIsLoaded:true}, () => {
-            this.fetchPcOrder();
+            this.fetchPcInfo();
           });
         })
       );
     }
 
-    fetchPcOrder = () => {
-      fetch("http://localhost:5000/api/mnist/fetch-pc-order")
+    fetchPcInfo = () => {
+      fetch("http://localhost:5000/api/mnist/fetch-pc-info")
         .then(res => res.json())
         .then( result => {
-          this.setState({pcOrder: result});
+          this.setState({pcOrder: result.order,minValues: result.min,maxValues: result.max,step: result.step});
         })
         .catch(err=> {
             console.log(err);
@@ -89,12 +92,12 @@ class MnistContainer extends Component {
         const rowOfSliders = [];
         for (let j = i*numCols; j < (i+1)*numCols; j++) {
           if (j>this.state.decoderInput.length){
-            rowOfSliders.push(<Col className='slider-col'></Col>)
+            rowOfSliders.push(<Col key={-j} className='slider-col'></Col>)
           } else {
-            rowOfSliders.push(<Col className='slider-col'><Slider id={this.state.pcOrder[j]} value={this.state.decoderInput[this.state.pcOrder[j]]} onSlide={this.updateDecoderInput} min={0} max={20}/></Col>)
+            rowOfSliders.push(<Col key={j} className='slider-col'><Slider id={this.state.pcOrder[j]} value={this.state.decoderInput[this.state.pcOrder[j]]} onSlide={this.updateDecoderInput} min={this.state.minValues[j]} max={this.state.maxValues[j]} step={this.state.step[j]}/></Col>)
           }
         }
-        sliders.push(<Row>{rowOfSliders}</Row>);
+        sliders.push(<Row key={i.toString()+"_row"} >{rowOfSliders}</Row>);
       }
       return sliders;
     }
@@ -102,7 +105,7 @@ class MnistContainer extends Component {
     render() {
       let sliders;
       if (!!this.state.decoderInput){
-          sliders = this.createSliders();
+        sliders = this.createSliders();
       } else {
         sliders = null;
       }
