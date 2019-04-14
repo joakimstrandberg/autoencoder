@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import '../style/App.css';
 import update from 'immutability-helper';
-import {facesModelsPath} from "../constants.js";
+import {facesModelsPath, modelApiPath} from "../constants.js";
 
 import { Button, Container, Row, Col} from 'reactstrap';
 import ImageComponentCol from './ImageComponentCol';
@@ -27,7 +27,6 @@ class FacesContainer extends Component {
   
     componentDidMount(){
       //Instantiate model
-      console.log(this.state)
       const model = new Model();
       model.loadModel(facesModelsPath,()=>
         this.setState({model:model},() => {
@@ -37,9 +36,13 @@ class FacesContainer extends Component {
         })
       );
     }
+    
+    componentWillUnmount(){
+      this.state.model.deleteModel();
+    }
 
     fetchPcInfo = () => {
-      fetch("http://localhost:5000/api/faces/fetch-pc-info")
+      fetch(modelApiPath + "api/faces/fetch-pc-info")
         .then(res => res.json())
         .then( result => {
           this.setState({pcOrder: result.order,minValues: result.min,maxValues: result.max,step: result.step});
@@ -50,7 +53,7 @@ class FacesContainer extends Component {
     }
     
     fetchData = () => {
-      fetch("http://localhost:5000/api/mnist/fetch-face")
+      fetch(modelApiPath + "api/mnist/fetch-face")
         .then(res => res.json())
         .then( result => {
           this.setState({sample: result[0]}, () => {
@@ -95,7 +98,7 @@ class FacesContainer extends Component {
           if (j>=this.state.decoderInput.length){
             rowOfSliders.push(<Col key={-j} className='slider-col'></Col>)
           } else {
-            rowOfSliders.push(<Col key={j} className='slider-col'><Slider id={this.state.pcOrder[j]} value={this.state.decoderInput[this.state.pcOrder[j]]} onSlide={this.updateDecoderInput} min={this.state.minValues[j]} max={this.state.maxValues[j]} step={this.state.step[j]}/></Col>)
+            rowOfSliders.push(<Col key={j} className='slider-col'><Slider id={this.state.pcOrder[j]} pc={j+1} value={this.state.decoderInput[this.state.pcOrder[j]]} onSlide={this.updateDecoderInput} min={this.state.minValues[j]} max={this.state.maxValues[j]} step={this.state.step[j]}/></Col>)
           }
         }
         sliders.push(<Row key={i.toString()+"_row"} >{rowOfSliders}</Row>);
@@ -124,7 +127,7 @@ class FacesContainer extends Component {
               <Col style={{margin: '1em auto'}}><Button onClick={() => this.fetchData()} color="danger" disabled={!!this.state.modelIsLoaded? false : true}>New face</Button></Col>
               <Col style={{margin: '1em auto'}}><Button onClick={() => this.predict()} color="primary"  disabled={!!this.state.sample? false : true} >Reset</Button></Col>
             </Row>
-            <Row><h4 style={{margin: '1em auto'}}>Latent features</h4></Row>
+            {/*<Row><h4 style={{margin: '1em auto'}}>Latent features</h4></Row>*/}
             {sliders}
           </Container>
           </div>
