@@ -37,7 +37,7 @@
   }
 
   .slider-col {
-    padding: 0.1em;
+    padding: 0.1em !important;
     margin: 0;
   }
 

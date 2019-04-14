@@ -9,13 +9,14 @@ import tensorflow as tf
 
 from constants.constants import mnist_pc_order, mnist_min, mnist_max, mnist_step, faces_pc_order, faces_min, faces_max, faces_step
 
-#Mnist encoder
-mnist_encoder = None
+#====SETUP=====
 mnist_data = None
-graph = None
-
+print("Starting server..")
 app = Flask(__name__,static_folder="",static_url_path='')
 CORS(app)
+print("Loading mnist encoder...")
+load_mnist_data()
+#===============
 
 @app.route('/')
 @app.route('/index')
@@ -26,13 +27,8 @@ def index():
 def fetch_model(path):
     return app.send_static_file(path)
 
-#TODO: Add min max values for each principal component
 #========= Methods for mnist methods =========
-def load_mnist_encoder():
-    global mnist_encoder 
-    mnist_encoder = load_model("../keras_model/mnist_encoder.h5")
-    mnist_encoder.compile(optimizer='adadelta', loss='binary_crossentropy')
-    mnist_encoder.summary()
+def load_mnist_data():
     global mnist_data
     mnist_data = np.load("./data/mnist_data.npy")
 
@@ -50,7 +46,6 @@ def fetch_digit():
     digit = fetch_rnd_digit(mnist_data)
     return jsonify(digit)
 
-#Order should be saved in a global variable?
 @app.route('/api/mnist/fetch-pc-order',methods=["GET"])
 def fetch_pc_order():
     return jsonify(mnist_pc_order)
@@ -69,11 +64,3 @@ def fetch_faces_pc_info():
     d["max"] = faces_max
     d["step"] = faces_step
     return jsonify(d)
-
-#==== setup ====
-print(__name__)
-if __name__ == "api":
-    print("Starting server..")
-    print("Loading mnist encoder...")
-    load_mnist_encoder()
-    graph = tf.get_default_graph()

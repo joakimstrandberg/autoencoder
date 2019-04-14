@@ -24,6 +24,7 @@ class ImageComponentCol extends Component {
         }
     }
 
+
     reshape = (data) =>{
         var pixelData = [];
         for (var x=0; x < data.length; x++) {

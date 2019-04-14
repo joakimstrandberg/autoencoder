@@ -14,26 +14,27 @@ export default class Model {
         this.inputShape = arr;
     }
 
-    //Make this a promise
     loadModel(path,callback){
-        var isError = false;
-        tf.loadLayersModel(path + 'autoencoder/model.json',{strict:true}).then(res => {
-            this.autoencoder = res;
-            this.getInputShape();
+        Promise.all([
+            tf.loadLayersModel(path + 'autoencoder/model.json',{strict:true}).then(res => {
+                this.autoencoder = res;
+                this.getInputShape();
+            }),
+            tf.loadLayersModel(path + 'decoder/model.json',{strict:true}).then(res => {
+                this.decoder = res;
+            }),
+            tf.loadLayersModel(path + 'encoder/model.json',{strict:true}).then(res => {
+                this.encoder = res;
+            })
+        ]).then(() => {
+            callback();
         }).catch(err => {
             console.log(err);
         });
-        tf.loadLayersModel(path + 'decoder/model.json',{strict:true}).then(res => {
-            this.decoder = res;
-        }).catch(err => {
-            console.log(err);
-        });
-        tf.loadLayersModel(path + 'encoder/model.json',{strict:true}).then(res => {
-            this.encoder = res;
-        }).catch(err => {
-            console.log(err);
-        });
-        callback();
+    }
+
+    deleteModel(){
+        tf.disposeVariables();
     }
 
     predict(x){
