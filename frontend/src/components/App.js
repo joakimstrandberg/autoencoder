@@ -6,6 +6,9 @@ import MnistContainer from "./MnistContainer";
 import FacesContainer from "./FacesContainer";
 import Navbar from "./Navbar";
 
+/*
+TODO: Fix proper datafetching on server side.
+*/
 const App = () => (
   <div>
     <div>

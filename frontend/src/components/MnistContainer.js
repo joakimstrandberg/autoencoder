@@ -41,7 +41,7 @@ class MnistContainer extends Component {
     }
 
     componentWillUnmount(){
-      //Make sure memory is not leakin
+      //Make sure memory is not leaking
       this.state.model.deleteModel();
     }
 
