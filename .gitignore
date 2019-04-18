@@ -1,17 +1,10 @@
 #own ignores
-model_api/models
-<<<<<<< HEAD
+model_api/models/faces/heavy_model/
+model_api/models/faces/v7/
 model_api/data/pokemon
 keras_model/celeba-dataset
 *.h5
 *.pyc
-=======
-model_api/data
-keras_model/celeba-dataset
-*.h5
-*.pyc
-backend/data
->>>>>>> 5641a9efb11c904bd6df05bd550a6f9d131cc9b4
 keras_model/
 
 # Logs
