@@ -1,10 +1,9 @@
 #own ignores
 model_api/models
-model_api/data
+model_api/data/pokemon
 keras_model/celeba-dataset
 *.h5
 *.pyc
-backend/data
 keras_model/
 
 # Logs

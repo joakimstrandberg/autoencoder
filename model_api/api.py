@@ -1,7 +1,7 @@
 from flask import Flask, request, send_from_directory, jsonify
 from flask_cors import CORS
 from mnist_handlers import sort_pc, fetch_rnd_digit, load_data
-from faces_handlers import fetch_rnd_face
+from faces_handlers import fetch_rnd_img
 
 from keras.models import Model, load_model
 import numpy as np
@@ -14,9 +14,6 @@ mnist_data = None
 print("Starting server..")
 app = Flask(__name__,static_folder="",static_url_path='')
 CORS(app)
-print("Loading mnist encoder...")
-load_mnist_data()
-#===============
 
 @app.route('/')
 @app.route('/index')
@@ -30,7 +27,7 @@ def fetch_model(path):
 #========= Methods for mnist methods =========
 def load_mnist_data():
     global mnist_data
-    mnist_data = np.load("./data/mnist_data.npy")
+    mnist_data = np.load("./data/mnist/mnist_data.npy")
 
 @app.route('/api/mnist/fetch-pc-info',methods=["GET"])
 def fetch_mnist_min_max_step():
@@ -51,9 +48,9 @@ def fetch_pc_order():
     return jsonify(mnist_pc_order)
 
 #========= Methods for faces methods =========
-@app.route('/api/mnist/fetch-face',methods=["GET"])
+@app.route('/api/faces/fetch-face',methods=["GET"])
 def fetch_face():
-    face = fetch_rnd_face()
+    face = fetch_rnd_img()
     return jsonify(face)
 
 @app.route('/api/faces/fetch-pc-info',methods=["GET"])
@@ -64,3 +61,8 @@ def fetch_faces_pc_info():
     d["max"] = faces_max
     d["step"] = faces_step
     return jsonify(d)
+
+#Load data into variable....
+print("Loading mnist encoder...")
+load_mnist_data()
+#===============
