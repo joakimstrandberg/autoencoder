@@ -28,4 +28,7 @@ with open(str(os.path.dirname(os.path.realpath(__file__)))+"/faces_steps", 'rb')
 f.close()
 
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 5641a9efb11c904bd6df05bd550a6f9d131cc9b4

@@ -20,6 +20,7 @@ def fetch_rnd_digit(data):
     return digit.tolist()
 
 # === Methods for creating mnist numpy file
+<<<<<<< HEAD
 def load_data(num=None):
     (x_train, _), (x_test, _) = mnist.load_data()
     x_train = x_train.reshape((len(x_train), np.prod(x_train.shape[1:])))
@@ -27,6 +28,12 @@ def load_data(num=None):
     if num != None:
         x_train = x_train[:num,:]
     print(x_train.shape)
+=======
+def load_data():
+    (x_train, _), (x_test, _) = mnist.load_data()
+    x_train = x_train.reshape((len(x_train), np.prod(x_train.shape[1:])))
+    x_train = x_train/255
+>>>>>>> 5641a9efb11c904bd6df05bd550a6f9d131cc9b4
     return x_train
 
 def save_data(data, path):
@@ -34,5 +41,10 @@ def save_data(data, path):
     np.save(path,data)
 
 if __name__ == "__main__":
+<<<<<<< HEAD
     data = load_data(200)
     save_data(data,"./data/mnist/mnist_data")
+=======
+    data = load_data()
+    save_data(data,"./data/mnist_data")
+>>>>>>> 5641a9efb11c904bd6df05bd550a6f9d131cc9b4
