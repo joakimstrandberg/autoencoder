@@ -37,11 +37,7 @@ def fetch_model(path):
 #========= Methods for mnist methods =========
 def load_mnist_data():
     global mnist_data
-<<<<<<< HEAD
     mnist_data = np.load("./data/mnist/mnist_data.npy")
-=======
-    mnist_data = np.load("./data/mnist_data.npy")
->>>>>>> 5641a9efb11c904bd6df05bd550a6f9d131cc9b4
 
 @app.route('/api/mnist/fetch-pc-info',methods=["GET"])
 def fetch_mnist_min_max_step():
@@ -62,15 +58,9 @@ def fetch_pc_order():
     return jsonify(mnist_pc_order)
 
 #========= Methods for faces methods =========
-<<<<<<< HEAD
 @app.route('/api/faces/fetch-face',methods=["GET"])
 def fetch_face():
     face = fetch_rnd_img()
-=======
-@app.route('/api/mnist/fetch-face',methods=["GET"])
-def fetch_face():
-    face = fetch_rnd_face()
->>>>>>> 5641a9efb11c904bd6df05bd550a6f9d131cc9b4
     return jsonify(face)
 
 @app.route('/api/faces/fetch-pc-info',methods=["GET"])
@@ -80,13 +70,9 @@ def fetch_faces_pc_info():
     d["min"] = faces_min
     d["max"] = faces_max
     d["step"] = faces_step
-<<<<<<< HEAD
     return jsonify(d)
 
 #Load data into variable....
 print("Loading mnist encoder...")
 load_mnist_data()
 #===============
-=======
-    return jsonify(d)
->>>>>>> 5641a9efb11c904bd6df05bd550a6f9d131cc9b4

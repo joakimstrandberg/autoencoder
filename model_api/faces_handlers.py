@@ -7,7 +7,6 @@ import numpy as np
 
 from PIL import Image
 from zipfile import ZipFile
-<<<<<<< HEAD
 
 from os import listdir
 from os.path import isfile, join
@@ -17,12 +16,6 @@ import random
 #CONFIG
 ARCHIVE_PATH = "../keras_model/celeba-dataset/img_align_celeba.zip"
 IMG_PATH = "./data/faces/"
-=======
-from handlers import sort_pc, calc_max, calc_min 
-
-#CONFIG
-ARCHIVE_PATH = "../keras_model/celeba-dataset/img_align_celeba.zip"
->>>>>>> 5641a9efb11c904bd6df05bd550a6f9d131cc9b4
 NUM_OBSERVATIONS = 15000
 IMG_WIDTH = 64 #int(178/2)
 IMG_HEIGHT = 64 #int(218/2)
@@ -46,7 +39,6 @@ def fetch_batch(path,w,h,c,start,end):
                 img_arr = np.asarray(img)
                 data[i,:,:,:] = img_arr.astype(np.uint8)[:,:,:]
     return data/255
-<<<<<<< HEAD
 '''
 def fetch_rnd_img():
     ix = np.random.choice(NUM_OBSERVATIONS, 1)[0]
@@ -81,10 +73,3 @@ def save_images(start,end,save_path,zip_path,shape=None):
                     img.save("{}img_{}.png".format(save_path,i))
   
                 
-=======
-
-def fetch_rnd_face():
-    ix = np.random.choice(NUM_OBSERVATIONS, 1)[0]
-    data = fetch_batch(ARCHIVE_PATH,IMG_WIDTH,IMG_HEIGHT,IMG_CHANNELS,ix,ix+1)
-    return data.tolist()
->>>>>>> 5641a9efb11c904bd6df05bd550a6f9d131cc9b4
