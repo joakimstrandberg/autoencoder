@@ -53,11 +53,7 @@ class FacesContainer extends Component {
     }
     
     fetchData = () => {
-<<<<<<< HEAD
       fetch(modelApiPath + "api/faces/fetch-face")
-=======
-      fetch(modelApiPath + "api/mnist/fetch-face")
->>>>>>> 5641a9efb11c904bd6df05bd550a6f9d131cc9b4
         .then(res => res.json())
         .then( result => {
           this.setState({sample: result[0]}, () => {
@@ -128,11 +124,7 @@ class FacesContainer extends Component {
               <Col><ImageComponentCol id={"predCanvas"} name={"Output image"} data={this.state.decoderOutput} width={64} height={64} channels={3} scale={5}/></Col>
             </Row>
             <Row>
-<<<<<<< HEAD
               <Col style={{margin: '1em auto'}}><Button onClick={() => this.fetchData()} color="danger" disabled={!!this.state.modelIsLoaded? false : true}>New input</Button></Col>
-=======
-              <Col style={{margin: '1em auto'}}><Button onClick={() => this.fetchData()} color="danger" disabled={!!this.state.modelIsLoaded? false : true}>New face</Button></Col>
->>>>>>> 5641a9efb11c904bd6df05bd550a6f9d131cc9b4
               <Col style={{margin: '1em auto'}}><Button onClick={() => this.predict()} color="primary"  disabled={!!this.state.sample? false : true} >Reset</Button></Col>
             </Row>
             {/*<Row><h4 style={{margin: '1em auto'}}>Latent features</h4></Row>*/}
