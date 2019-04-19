@@ -1,11 +1,7 @@
 from flask import Flask, request, send_from_directory, jsonify
 from flask_cors import CORS
 from mnist_handlers import sort_pc, fetch_rnd_digit, load_data
-<<<<<<< HEAD
 from faces_handlers import fetch_rnd_img
-=======
-from faces_handlers import fetch_rnd_face
->>>>>>> 5641a9efb11c904bd6df05bd550a6f9d131cc9b4
 
 from keras.models import Model, load_model
 import numpy as np
@@ -18,17 +14,6 @@ mnist_data = None
 print("Starting server..")
 app = Flask(__name__,static_folder="",static_url_path='')
 CORS(app)
-<<<<<<< HEAD
-=======
-print("Loading mnist encoder...")
-load_mnist_data()
-#===============
->>>>>>> 5641a9efb11c904bd6df05bd550a6f9d131cc9b4
-
-@app.route('/')
-@app.route('/index')
-def index():
-    return "hello"
 
 @app.route('/<path:path>')
 def fetch_model(path):
@@ -73,6 +58,6 @@ def fetch_faces_pc_info():
     return jsonify(d)
 
 #Load data into variable....
-print("Loading mnist encoder...")
+print("Loading mnist data...")
 load_mnist_data()
 #===============
