@@ -20,6 +20,4 @@ app.get('*', (req, res) => {
 })
 
 //start server
-app.listen(port, (req, res) => {
-  console.log( `server listening on port: ${port}`);
-})
+app.listen(process.env.PORT, '0.0.0.0')
