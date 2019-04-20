@@ -4,14 +4,14 @@ const path = require('path');
 const port = process.env.PORT || 8080;
 
 //Static file declaration
-app.use(express.static(path.join(__dirname, '/frontend/build')));
+app.use(express.static(path.join(__dirname, 'frontend/build')));
 
 //production mode
 if(process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, '/frontend/build')));
+  app.use(express.static(path.join(__dirname, 'frontend/build')));
   //
   app.get('*', (req, res) => {
-    res.sendfile(path.join(__dirname = '/frontend/build/index.html'));
+    res.sendfile(path.join(__dirname = 'frontend/build/index.html'));
   })
 }
 //build mode
