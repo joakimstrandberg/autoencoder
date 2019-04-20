@@ -18,5 +18,8 @@
     "express": "^4.16.4",
     "express-favicon": "^2.0.1",
     "package.json": "^2.0.1"
+  },
+  "engines": {
+    "node": "10.15.2"
   }
 }
