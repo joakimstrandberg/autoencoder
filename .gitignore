@@ -6,7 +6,7 @@ keras_model/celeba-dataset
 *.h5
 *.pyc
 keras_model/
-frontend/build
+webserver/frontend/build
 
 #src/*
 #public/*

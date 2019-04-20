@@ -1,23 +1,26 @@
 import React, { Component } from 'react';
 import '../style/App.css';
 import update from 'immutability-helper';
-import {facesModelsPath, modelApiPath} from "../constants.js";
+import {mnistModelsPath,modelApiPath} from "../constants.js";
 
 import { Button, Container, Row, Col} from 'reactstrap';
-import ImageComponentCol from './ImageComponentCol';
+import ImageComponent from './ImageComponent';
 import Slider from './Slider';
 import Model from '../model.js';
 
-class FacesContainer extends Component {
+/*TODO: fix fetchdigit when component mounts. 
+TODO: merge mnist and faces container into one
+*/
+class MnistContainer extends Component {
     constructor(props) {
       super(props);
       this.state = {
-        sample: null,
-        decoderOutput: null,
+        digit: null,
+        predDigit: null,
         model: null,
         modelIsLoaded: false,
         decoderInput: null,
-        encoderOutput: null,
+        encoderOutout: null,
         pcOrder: null,
         minValues: null,
         maxValues: null,
@@ -28,7 +31,7 @@ class FacesContainer extends Component {
     componentDidMount(){
       //Instantiate model
       const model = new Model();
-      model.loadModel(facesModelsPath,()=>
+      model.loadModel(mnistModelsPath,()=>
         this.setState({model:model},() => {
           this.setState({modelIsLoaded:true}, () => {
             this.fetchPcInfo();
@@ -36,13 +39,16 @@ class FacesContainer extends Component {
         })
       );
     }
-    
+
     componentWillUnmount(){
-      this.state.model.deleteModel();
+      //Make sure memory is not leaking
+      if (!!this.state.model) {
+        this.state.model.deleteModel();
+      }
     }
 
     fetchPcInfo = () => {
-      fetch(modelApiPath + "api/faces/fetch-pc-info")
+      fetch(modelApiPath + "api/mnist/fetch-pc-info")
         .then(res => res.json())
         .then( result => {
           this.setState({pcOrder: result.order,minValues: result.min,maxValues: result.max,step: result.step});
@@ -52,12 +58,12 @@ class FacesContainer extends Component {
         });
     }
     
-    fetchData = () => {
-      fetch(modelApiPath + "api/faces/fetch-face")
+    fetchDigit = () => {
+      fetch(modelApiPath + "api/mnist/fetch-digit")
         .then(res => res.json())
         .then( result => {
-          this.setState({sample: result[0]}, () => {
-            this.predict();
+          this.setState({digit: result[0]}, () => {
+            this.predictDigit();
           });
         })
         .catch(err=> {
@@ -65,26 +71,22 @@ class FacesContainer extends Component {
         });
     }
   
-    predict = () => {
-      const decoderOutput = this.state.model.predict(this.state.sample);
-      this.setState({decoderOutput:decoderOutput},() =>{
-      });
+    predictDigit = () => {
+      const predDigit = this.state.model.predict(this.state.digit);
+      this.setState({predDigit:predDigit});
       this.getEncoderOutput();
     }
   
     getEncoderOutput = () => {
-      const encoderOutput = this.state.model.predictEncoder(this.state.sample);
-      this.setState({encoderOutput:encoderOutput});
-      this.setState({decoderInput:encoderOutput});
+      const encoderOutout = this.state.model.predictEncoder(this.state.digit);
+      this.setState({encoderOutout:encoderOutout},this.setState({decoderInput:encoderOutout}));
     }
   
     updateDecoderInput = (index,data) => {
-      //Update state of the decoder input array element corresponding do slider
       const newInput = update(this.state.decoderInput, {[index]: {$set: parseFloat(data.target.value)}});
       this.setState({decoderInput:newInput},() => {
         const decoderOutput = this.state.model.predictDecoder(this.state.decoderInput);
-        this.setState({decoderOutput:decoderOutput}, () => {
-        });
+        this.setState({predDigit:decoderOutput});
       });
     }
   
@@ -95,7 +97,7 @@ class FacesContainer extends Component {
       for (let i=0;i<numRows;i++){
         const rowOfSliders = [];
         for (let j = i*numCols; j < (i+1)*numCols; j++) {
-          if (j>=this.state.decoderInput.length){
+          if (j>this.state.decoderInput.length){
             rowOfSliders.push(<Col key={-j} className='slider-col'></Col>)
           } else {
             rowOfSliders.push(<Col key={j} className='slider-col'><Slider id={this.state.pcOrder[j]} pc={j+1} value={this.state.decoderInput[this.state.pcOrder[j]]} onSlide={this.updateDecoderInput} min={this.state.minValues[j]} max={this.state.maxValues[j]} step={this.state.step[j]}/></Col>)
@@ -109,7 +111,7 @@ class FacesContainer extends Component {
     render() {
       let sliders;
       if (!!this.state.decoderInput){
-          sliders = this.createSliders();
+        sliders = this.createSliders();
       } else {
         sliders = null;
       }
@@ -120,14 +122,13 @@ class FacesContainer extends Component {
           <div className="container" style={appDiv}>
           <Container>
             <Row>
-              <Col><ImageComponentCol id={"inputCanvas"} name={"Input image"} data={this.state.sample} width={64} height={64} channels={3} scale={5}/></Col>
-              <Col><ImageComponentCol id={"predCanvas"} name={"Output image"} data={this.state.decoderOutput} width={64} height={64} channels={3} scale={5}/></Col>
+              <Col><ImageComponent id={"inputCanvas"} name={"Input image"} data={this.state.digit}/></Col>
+              <Col><ImageComponent id={"predCanvas"} name={"Output image"} data={this.state.predDigit}/></Col>
             </Row>
             <Row>
-              <Col style={{margin: '1em auto'}}><Button onClick={() => this.fetchData()} color="danger" disabled={!!this.state.modelIsLoaded? false : true}>New input</Button></Col>
-              <Col style={{margin: '1em auto'}}><Button onClick={() => this.predict()} color="primary"  disabled={!!this.state.sample? false : true} >Reset</Button></Col>
+              <Col style={{margin: '1em auto'}}><Button onClick={() => this.fetchDigit()} color="danger" disabled={!!this.state.modelIsLoaded? false : true}>New Input</Button></Col>
+              <Col style={{margin: '1em auto'}}><Button onClick={() => this.predictDigit()} color="primary"  disabled={!!this.state.digit? false : true} >Reset</Button></Col>
             </Row>
-            {/*<Row><h4 style={{margin: '1em auto'}}>Latent features</h4></Row>*/}
             {sliders}
           </Container>
           </div>
@@ -141,5 +142,5 @@ class FacesContainer extends Component {
     padding: '1em',
   }
   
-  export default FacesContainer;
+  export default MnistContainer;
   
