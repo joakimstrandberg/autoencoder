@@ -37,11 +37,11 @@ def fetch_mnist_min_max_step():
 def fetch_digit():
     digit = fetch_rnd_digit(mnist_data)
     return jsonify(digit)
-
+'''
 @app.route('/api/mnist/fetch-pc-order',methods=["GET"])
 def fetch_pc_order():
     return jsonify(mnist_pc_order)
-
+'''
 #========= Methods for faces methods =========
 @app.route('/api/faces/fetch-face',methods=["GET"])
 def fetch_face():
