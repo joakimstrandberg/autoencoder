@@ -1,6 +1,6 @@
 # Autoencoder webapp
 
-A webapplication with tensorflowjs autoencoders trained on mnist and celeba dataset. The encoded features can be changed with sliders to generate new images. The encoded features are ordered according to their variance making the first slider corresponding to the feature capturing most variance in the data.
+A webapplication with tensorflowjs autoencoders trained on mnist and celeba dataset running in the browser. The encoded features can be changed with sliders to generate new images with the decoder of the autoencoder. The encoded features are ordered according to their variance making the first slider corresponding to the feature capturing most variance in the data.
 
 The application is created with React, Nodejs, Express and Flask.
 
