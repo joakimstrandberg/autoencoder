@@ -28,6 +28,9 @@ class MnistContainer extends Component {
       };
     }
   
+    /*
+    Load model and fetch order of principal components, min, max and step values when component is mounted
+    */
     componentDidMount(){
       //Instantiate model
       const model = new Model();
@@ -35,6 +38,7 @@ class MnistContainer extends Component {
         this.setState({model:model},() => {
           this.setState({modelIsLoaded:true}, () => {
             this.fetchPcInfo();
+            //this.fetchDigit();
           });
         })
       );
@@ -47,6 +51,9 @@ class MnistContainer extends Component {
       }
     }
 
+    /*
+      Fetch information necessary to order and "scale" slider appropriatly according to their correspoding latent feature. 
+    */
     fetchPcInfo = () => {
       fetch(modelApiPath + "api/mnist/fetch-pc-info")
         .then(res => res.json())
@@ -58,6 +65,9 @@ class MnistContainer extends Component {
         });
     }
     
+    /*
+      Fetch input data to autoencoder
+    */
     fetchDigit = () => {
       fetch(modelApiPath + "api/mnist/fetch-digit")
         .then(res => res.json())
@@ -70,18 +80,27 @@ class MnistContainer extends Component {
             console.log(err);
         });
     }
-  
+    
+    /* 
+      Predict ouput with autoencoder
+    */
     predictDigit = () => {
       const predDigit = this.state.model.predict(this.state.digit);
       this.setState({predDigit:predDigit});
       this.getEncoderOutput();
     }
-  
+
+    /*
+      Predict with encoder to get latent features of the autoencoder. This is used to set the initial slider positions.
+    */
     getEncoderOutput = () => {
       const encoderOutout = this.state.model.predictEncoder(this.state.digit);
       this.setState({encoderOutout:encoderOutout},this.setState({decoderInput:encoderOutout}));
     }
   
+    /*
+      Update the decoder input. This update slider positions when moved and then use the updated decoder input to create new output.
+    */
     updateDecoderInput = (index,data) => {
       const newInput = update(this.state.decoderInput, {[index]: {$set: parseFloat(data.target.value)}});
       this.setState({decoderInput:newInput},() => {
@@ -90,6 +109,9 @@ class MnistContainer extends Component {
       });
     }
   
+    /*
+      Create sliders. One slider for each latent feature of the autoencoder.
+    */
     createSliders = () => {
       const numCols = 8;
       const numRows = Math.ceil(this.state.decoderInput.length/numCols);

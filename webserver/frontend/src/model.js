@@ -9,11 +9,6 @@ export default class Model {
         this.inputShape = null
     }
 
-    getInputShape(){
-        const arr = this.autoencoder.getLayer("input_1").batchInputShape.slice(1);
-        this.inputShape = arr;
-    }
-
     loadModel(path,callback){
         Promise.all([
             tf.loadLayersModel(path + 'autoencoder/model.json',{strict:true}).then(res => {
@@ -39,8 +34,6 @@ export default class Model {
 
     predict(x){
         const d = tf.tidy(() => { 
-            var shape = this.inputShape.slice();
-            shape.unshift(1);
             const x_tensor= tf.tensor([x]);
             var pred = this.autoencoder.predict(x_tensor);
             var arr = pred.arraySync()[0];

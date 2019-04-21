@@ -10,6 +10,7 @@ import Navbar from "./Navbar";
 TODO: Fix proper datafetching on server side.
 TODO: add randomize button
 TODO: add transistion button
+TODO: fix mobile 
 */
 class App extends Component {
 
@@ -18,6 +19,7 @@ class App extends Component {
     this.state = {}
     this.connecToServer = this.connecToServer.bind(this);
   }
+  
   connecToServer() {
     fetch('/');
   }

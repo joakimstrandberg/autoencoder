@@ -1,17 +1,18 @@
 import React from 'react';
 import { Nav, NavItem, NavLink } from 'reactstrap';
-import { Link } from 'react-router-dom';
+import { NavLink as Link } from 'react-router-dom';
+import "../style/Navbar.css";
 
 const Navbar = () => (
     <div>
         <Nav>
             <NavItem>
-            <NavLink tag={Link} style={{ textDecoration: 'none' }} to="/mnist">
+            <NavLink tag={Link}  activeClassName="active" style={{ textDecoration: 'none' }} to="/mnist">
               mnist
             </NavLink>
             </NavItem>
           <NavItem>
-            <NavLink tag={Link} style={{ textDecoration: 'none' }} to="/faces">
+            <NavLink tag={Link}  activeClassName="active" style={{ textDecoration: 'none' }} to="/faces">
               Celebrity faces dataset
             </NavLink>
           </NavItem>
