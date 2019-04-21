@@ -27,7 +27,7 @@ class FacesContainer extends Component {
   
     componentDidMount(){
       //Instantiate model
-      console.log(facesModelsPath); 
+      //console.log(facesModelsPath); 
       const model = new Model();
       model.loadModel(facesModelsPath,()=>
         this.setState({model:model},() => {
