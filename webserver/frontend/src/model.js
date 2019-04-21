@@ -13,7 +13,6 @@ export default class Model {
         Promise.all([
             tf.loadLayersModel(path + 'autoencoder/model.json',{strict:true}).then(res => {
                 this.autoencoder = res;
-                this.getInputShape();
             }),
             tf.loadLayersModel(path + 'decoder/model.json',{strict:true}).then(res => {
                 this.decoder = res;
