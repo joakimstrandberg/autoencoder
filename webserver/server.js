@@ -1,26 +1,26 @@
 const express = require('express');
-const bodyParser = require('body-parser');
-const path = require('path');
 const app = express();
+const path = require('path');
 const port = process.env.PORT || 5000;
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-// API calls
-app.get('/api/hello', (req, res) => {
-  res.send({ express: 'Hello From Express' });
-});
-app.post('/api/world', (req, res) => {
-  console.log(req.body);
-  res.send(
-    `I received your POST request. This is what you sent me: ${req.body.post}`,
-  );
-});
-if (true || process.env.NODE_ENV === 'production') {
-  // Serve any static files
-  app.use(express.static(path.join(__dirname, '../frontend/build')));
-  // Handle React routing, return all requests to React app
-  app.get('/*', function(req, res) {
-    res.sendFile(path.join(__dirname, '../frontend/build', 'index.html'));
-  });
+
+console.log(__dirname)
+//Static file declaration
+app.use(express.static(path.join(__dirname, 'frontend/build')));
+
+//production mode
+if(process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, 'frontend/build')));
+  //
+  app.get('/*', (req, res) => {
+    res.sendfile(path.join(__dirname = 'frontend/build/index.html'));
+  })
 }
-app.listen(port, () => console.log(`Listening on port ${port}`));
+//build mode
+app.get('/*', (req, res) => {
+  res.sendFile(path.join(__dirname+'/frontend/public/index.html'));
+})
+
+//start server
+app.listen(port, (req, res) => {
+  console.log( `server listening on port: ${port}`);
+})
