@@ -4,7 +4,9 @@ A webapplication with tensorflowjs autoencoders trained on mnist and celeba data
 
 The application is created with React, Nodejs, Express and Flask.
 
-## Datasets
-link to mnist dataset: http://yann.lecun.com/exdb/mnist/index.html
+Link to application: https://autoencoder-webapp.herokuapp.com/faces 
 
-link to celeba dataset: https://www.kaggle.com/jessicali9530/celeba-dataset
+## Datasets
+Link to mnist dataset: http://yann.lecun.com/exdb/mnist/index.html
+
+Link to celeba dataset: https://www.kaggle.com/jessicali9530/celeba-dataset
