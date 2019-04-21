@@ -6,4 +6,5 @@ The application is created with React, Nodejs, Express and Flask.
 
 ## Datasets
 link to mnist dataset: http://yann.lecun.com/exdb/mnist/index.html
+
 link to celeba dataset: https://www.kaggle.com/jessicali9530/celeba-dataset
